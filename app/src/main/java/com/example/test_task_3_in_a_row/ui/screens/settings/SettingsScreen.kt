@@ -113,7 +113,7 @@ fun SettingsScreen(
                 icon = Icons.Default.AutoAwesome,
                 iconBgColor = Color(0xFFE7658B),
                 title = "Restore Purchases",
-                onClick = { viewModel.restorePurchases() }
+                onClick = {  }
             )
         }
     }
