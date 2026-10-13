@@ -27,10 +27,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.ui.graphics.Brush
 
 @Composable
-fun Header(money: Int, levelNumber: Int = 0, isMainScreen: Boolean = false, modifier: Modifier = Modifier, onBackClick: () -> Unit) {
+fun Header(money: Int, levelNumber: Int = 0, isMainScreen: Boolean = false, modifier: Modifier = Modifier, onBackClick: () -> Unit, onStarButtonClick: () -> Unit = {}, onSunButtonClick: () -> Unit = {}) {
 
     if (isMainScreen) {
         Row(
@@ -41,8 +42,8 @@ fun Header(money: Int, levelNumber: Int = 0, isMainScreen: Boolean = false, modi
             MoneyLabel(money)
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                CustomIconButton(icon = Icons.Default.Star, onClick = {})
-                CustomIconButton(icon = Icons.Default.Settings, onClick = {})
+                CustomIconButton(icon = Icons.Default.Star, onClick = onStarButtonClick)
+                CustomIconButton(icon = Icons.Default.WbSunny, onClick = onSunButtonClick)
             }
         }
 

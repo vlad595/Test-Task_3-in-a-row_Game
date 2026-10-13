@@ -31,7 +31,7 @@ val YellowBlock = Color(0xFFE4BC4B)
 val PurpleBlock = Color(0xFF9B63E7)
 
 @Composable
-fun MainScreen(onPlayClick: () -> Unit, onLevelsClick: () -> Unit, onShopClick: () -> Unit) {
+fun MainScreen(onPlayClick: () -> Unit, onLevelsClick: () -> Unit, onShopClick: () -> Unit, onSunButtonClick: () -> Unit, onStarButtonClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -39,7 +39,7 @@ fun MainScreen(onPlayClick: () -> Unit, onLevelsClick: () -> Unit, onShopClick: 
             .padding(top = 48.dp, bottom = 24.dp, start = 16.dp, end = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Header(1250, isMainScreen = true, onBackClick = { })
+        Header(1250, isMainScreen = true, onBackClick = { }, onSunButtonClick = onSunButtonClick, onStarButtonClick = onStarButtonClick)
 
         Spacer(modifier = Modifier.weight(0.8f))
 
@@ -219,5 +219,5 @@ fun DailyRewardButton() {
 @Preview(showSystemUi = true)
 @Composable
 fun MainScreenPreview() {
-    MainScreen(onPlayClick = {}, onShopClick = {}, onLevelsClick = {})
+    MainScreen(onPlayClick = {}, onShopClick = {}, onLevelsClick = {}, onStarButtonClick = {}, onSunButtonClick = {})
 }

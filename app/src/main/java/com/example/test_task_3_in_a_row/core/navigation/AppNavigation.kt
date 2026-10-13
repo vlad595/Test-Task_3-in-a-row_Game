@@ -12,6 +12,7 @@ import com.example.test_task_3_in_a_row.ui.screens.home.MainScreen
 import com.example.test_task_3_in_a_row.ui.screens.levels.LevelsScreen
 import com.example.test_task_3_in_a_row.ui.screens.main.GameScreen
 import com.example.test_task_3_in_a_row.data.models.generateLevels
+import com.example.test_task_3_in_a_row.ui.screens.profile.ProfileScreen
 import com.example.test_task_3_in_a_row.ui.screens.settings.SettingsScreen
 import com.example.test_task_3_in_a_row.ui.screens.shop.ShopScreen
 
@@ -30,7 +31,9 @@ fun AppNavigation() {
             MainScreen(
                 onPlayClick = { navController.navigate(Screen.Game.createRoute(passedLevels.size)) },
                 onLevelsClick = { navController.navigate(Screen.Levels.route)},
-                onShopClick = { navController.navigate(Screen.Shop.route) }
+                onShopClick = { navController.navigate(Screen.Shop.route) },
+                onStarButtonClick = {  },
+                onSunButtonClick = { navController.navigate(Screen.Profile.route) }
             )
         }
 
@@ -74,5 +77,10 @@ fun AppNavigation() {
             )
         }
 
+        composable(route = Screen.Profile.route){
+            ProfileScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
     }
 }
