@@ -1,4 +1,4 @@
-package com.example.test_task_3_in_a_row.feature.main.presentation
+package com.example.test_task_3_in_a_row.ui.screens.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,9 +16,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.test_task_3_in_a_row.feature.main.presentation.domain.Cell
-import com.example.test_task_3_in_a_row.feature.main.presentation.domain.LevelGoal
-import com.example.test_task_3_in_a_row.feature.shared.Header
+import com.example.test_task_3_in_a_row.ui.screens.main.domain.Cell
+import com.example.test_task_3_in_a_row.ui.screens.main.domain.LevelGoal
+import com.example.test_task_3_in_a_row.ui.shared.Header
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -28,13 +28,13 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.runtime.key
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.animation.core.*
-import androidx.compose.runtime.*
+import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
 import com.example.test_task_3_in_a_row.core.navigation.Screen
-import com.example.test_task_3_in_a_row.feature.shared.LevelCompleteOverlay
-import com.example.test_task_3_in_a_row.feature.shared.LevelFailedCard
-import com.example.test_task_3_in_a_row.feature.shared.LevelFailedOverlay
-import com.example.test_task_3_in_a_row.feature.shared.PauseOverlay
+import com.example.test_task_3_in_a_row.ui.shared.LevelCompleteOverlay
+import com.example.test_task_3_in_a_row.ui.shared.LevelFailedOverlay
+import com.example.test_task_3_in_a_row.ui.shared.PauseOverlay
+import com.example.test_task_3_in_a_row.viewModels.GameViewModel
 
 @Composable
 fun GameScreen(
@@ -203,8 +203,8 @@ fun GameBoard(
 @Composable
 fun AnimatedCube(
     cell: Cell,
-    cellWidth: androidx.compose.ui.unit.Dp,
-    cellHeight: androidx.compose.ui.unit.Dp,
+    cellWidth: Dp,
+    cellHeight: Dp,
     isSelected: Boolean,
     isHinted: Boolean,
     onClick: () -> Unit

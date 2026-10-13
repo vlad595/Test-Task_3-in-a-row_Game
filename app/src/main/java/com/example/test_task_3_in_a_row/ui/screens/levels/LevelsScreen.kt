@@ -1,4 +1,4 @@
-package com.example.test_task_3_in_a_row.feature.levels.presentation
+package com.example.test_task_3_in_a_row.ui.screens.levels
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.test_task_3_in_a_row.feature.shared.Header
+import com.example.test_task_3_in_a_row.ui.shared.Header
 
 // Кольори з дизайну
 val BgColor = Color(0xFF140908)

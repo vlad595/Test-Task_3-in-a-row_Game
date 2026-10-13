@@ -1,43 +1,30 @@
-package com.example.test_task_3_in_a_row.feature.shared
+package com.example.test_task_3_in_a_row.ui.shared
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.test_task_3_in_a_row.ui.theme.GameColors
 
 @Composable
-fun LevelCompleteOverlay(
-    onNextLevelClick: () -> Unit,
+fun LevelFailedOverlay(
     onRetryClick: () -> Unit,
+    onLevelsClick: () -> Unit,
     onHomeClick: () -> Unit,
     onDismiss: () -> Unit,
-    coindEarned: Int,
     score: Int
 ) {
     Box(
@@ -57,12 +44,10 @@ fun LevelCompleteOverlay(
                     indication = null
                 ) {}
         ) {
-            LevelCompleteCard(
+            LevelFailedCard(
                 score = score.toString(),
-                coins = "+$coindEarned",
-                starsCount = 2,
-                onNextLevelClick = onNextLevelClick,
                 onRetryClick = onRetryClick,
+                onLevelsClick = onLevelsClick,
                 onHomeClick = onHomeClick
             )
         }
@@ -70,12 +55,10 @@ fun LevelCompleteOverlay(
 }
 
 @Composable
-fun LevelCompleteCard(
+fun LevelFailedCard(
     score: String,
-    coins: String,
-    starsCount: Int,
-    onNextLevelClick: () -> Unit,
     onRetryClick: () -> Unit,
+    onLevelsClick: () -> Unit,
     onHomeClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -85,6 +68,7 @@ fun LevelCompleteCard(
             .padding(top = 24.dp),
         contentAlignment = Alignment.TopCenter
     ) {
+        // Основний темний контейнер
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -103,31 +87,33 @@ fun LevelCompleteCard(
         ) {
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Порожні зірки (символізують програш)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 StarIcon(
-                    isLit = starsCount >= 1,
+                    isLit = false,
                     modifier = Modifier.size(45.dp).padding(bottom = 8.dp)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 StarIcon(
-                    isLit = starsCount >= 2,
+                    isLit = false,
                     modifier = Modifier.size(65.dp).padding(bottom = 16.dp)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 StarIcon(
-                    isLit = starsCount >= 3,
+                    isLit = false,
                     modifier = Modifier.size(45.dp).padding(bottom = 8.dp)
                 )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // SCORE (Рахунок, який вдалося набрати)
             Text(
-                text = "FINAL SCORE",
+                text = "SCORE",
                 color = GameColors.ScoreLabelText,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
@@ -142,43 +128,9 @@ fun LevelCompleteCard(
                 modifier = Modifier.padding(vertical = 4.dp)
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Row(
-                modifier = Modifier
-                    .background(GameColors.CoinsContainerBackground, RoundedCornerShape(50.dp))
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .background(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(GameColors.CoinIconGradientStart, GameColors.CoinIconGradientEnd)
-                            ),
-                            shape = RoundedCornerShape(50.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "$",
-                        color = GameColors.CoinSymbolText,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = coins,
-                    color = GameColors.CoinsValueText,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
             Spacer(modifier = Modifier.height(32.dp))
 
+            // Головна кнопка RETRY
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -194,7 +146,7 @@ fun LevelCompleteCard(
                         ),
                         shape = RoundedCornerShape(24.dp)
                     )
-                    .clickable { onNextLevelClick() }
+                    .clickable { onRetryClick() }
                     .padding(vertical = 4.dp),
                 contentAlignment = Alignment.Center
             ) {
@@ -207,7 +159,7 @@ fun LevelCompleteCard(
                 )
 
                 Text(
-                    text = "NEXT LEVEL",
+                    text = "RETRY",
                     color = GameColors.PrimaryButtonText,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
@@ -217,13 +169,14 @@ fun LevelCompleteCard(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Нижні кнопки: LEVELS та HOME
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 SmallGameButton(
-                    text = "RETRY",
-                    onClick = onRetryClick,
+                    text = "LEVELS",
+                    onClick = onLevelsClick,
                     modifier = Modifier.weight(1f)
                 )
                 SmallGameButton(
@@ -234,6 +187,7 @@ fun LevelCompleteCard(
             }
         }
 
+        // Плашка "LEVEL FAILED" зверху
         Box(
             modifier = Modifier
                 .offset(y = (-16).dp)
@@ -246,6 +200,8 @@ fun LevelCompleteCard(
                 )
                 .background(
                     brush = Brush.verticalGradient(
+                        // Можна зробити градієнт темнішим/сірішим, якщо потрібно,
+                        // але поточні червоні кольори також чудово підходять для "Failed"
                         colors = listOf(GameColors.HeaderGradientStart, GameColors.HeaderGradientEnd)
                     ),
                     shape = RoundedCornerShape(16.dp)
@@ -263,7 +219,7 @@ fun LevelCompleteCard(
                     letterSpacing = 1.sp
                 )
                 Text(
-                    text = "COMPLETE",
+                    text = "FAILED", // Змінено на FAILED
                     color = GameColors.HeaderTitleText,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.ExtraBold,
@@ -274,84 +230,16 @@ fun LevelCompleteCard(
     }
 }
 
-@Composable
-fun StarIcon(isLit: Boolean, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        if (isLit) {
-            Box(
-                modifier = Modifier
-                    .size(45.dp)
-                    .blur(16.dp)
-                    .background(GameColors.StarGlow, RoundedCornerShape(50.dp))
-            )
-            Icon(
-                imageVector = Icons.Default.Star,
-                contentDescription = "Lit Star",
-                tint = GameColors.StarLit,
-                modifier = Modifier.fillMaxSize()
-            )
-        } else {
-            Icon(
-                imageVector = Icons.Default.Star,
-                contentDescription = "Unlit Star",
-                tint = GameColors.StarUnlit,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-    }
-}
-
-@Composable
-fun SmallGameButton(
-    text: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(GameColors.SecondaryButtonGradientStart, GameColors.SecondaryButtonGradientEnd)
-                ),
-                shape = RoundedCornerShape(16.dp)
-            )
-            .border(1.dp, GameColors.SecondaryButtonBorder, RoundedCornerShape(16.dp))
-            .clickable { onClick() }
-            .padding(vertical = 4.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(0.85f)
-                .height(8.dp)
-                .align(Alignment.TopCenter)
-                .background(GameColors.SecondaryButtonHighlight, RoundedCornerShape(50.dp))
-        )
-
-        Text(
-            text = text,
-            color = GameColors.SecondaryButtonText,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(vertical = 8.dp)
-        )
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
-fun LevelCompleteOverlayPreview() {
+fun LevelFailedOverlayPreview() {
     Box(modifier = Modifier.fillMaxSize()) {
-        LevelCompleteOverlay(
-            onNextLevelClick = {},
+        LevelFailedOverlay(
             onRetryClick = {},
+            onLevelsClick = {},
             onHomeClick = {},
             onDismiss = {},
-            coindEarned = 245,
-            score = 1265
+            score = 840
         )
     }
 }

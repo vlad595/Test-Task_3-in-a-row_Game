@@ -1,15 +1,13 @@
-package com.example.test_task_3_in_a_row.feature.main.presentation
+package com.example.test_task_3_in_a_row.viewModels
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.test_task_3_in_a_row.feature.main.presentation.domain.Cell
-import com.example.test_task_3_in_a_row.feature.main.presentation.domain.CubeType
-import com.example.test_task_3_in_a_row.feature.main.presentation.domain.LevelGoal
+import com.example.test_task_3_in_a_row.ui.screens.main.domain.Cell
+import com.example.test_task_3_in_a_row.ui.screens.main.domain.CubeType
+import com.example.test_task_3_in_a_row.ui.screens.main.domain.LevelGoal
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.math.abs

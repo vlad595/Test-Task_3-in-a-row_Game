@@ -1,4 +1,4 @@
-package com.example.test_task_3_in_a_row.feature.shared
+package com.example.test_task_3_in_a_row.ui.shared
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,7 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.test_task_3_in_a_row.feature.home.presentation.GameBlock
+import com.example.test_task_3_in_a_row.ui.screens.home.GameBlock
 import com.example.test_task_3_in_a_row.ui.theme.GameColors
 
 @Composable
