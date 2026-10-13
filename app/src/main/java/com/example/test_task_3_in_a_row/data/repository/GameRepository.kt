@@ -48,13 +48,13 @@ class GameRepository @Inject constructor(
     val languageFlow: Flow<String> = dataStore.data.map { it[LANGUAGE] ?: "EN" }
 
     suspend fun updateCoins(amount: Int) {
-        dataStore.edit { it[COINS] = (it[COINS] ?: 1250) + amount }
+        dataStore.edit { it[COINS] = (it[COINS] ?: 0) + amount }
     }
 
     suspend fun spendCoins(amount: Int): Boolean {
         var success = false
         dataStore.edit { prefs ->
-            val current = prefs[COINS] ?: 1250
+            val current = prefs[COINS] ?: 0
             if (current >= amount) {
                 prefs[COINS] = current - amount
                 success = true

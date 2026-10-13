@@ -70,7 +70,7 @@ fun GameScreen(
             .padding(top = 48.dp, bottom = 24.dp, start = 16.dp, end = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Header(money = money, levelNumber = levelNumber + 1, onBackClick = { pauseClicked = true })
+        Header(money = money, levelNumber = levelNumber, onBackClick = { pauseClicked = true })
         Spacer(modifier = Modifier.height(24.dp))
 
         Row(
