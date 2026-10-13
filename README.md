@@ -50,7 +50,7 @@
 
 * **Мова:** Kotlin
 * **UI:** Jetpack Compose
-* **Архітектура:** MVVM (Model-View-ViewModel) + Unidirectional Data Flow (UDF)
+* **Архітектура:** MVVM + Unidirectional Data Flow
 * **Dependency Injection:** Dagger Hilt
 * **Локальне збереження:** Preferences DataStore
 * **Асинхронність:** Kotlin Coroutines & StateFlow
@@ -58,7 +58,7 @@
 
 ## 🏗 Архітектура та DI
 
-Додаток використовує **Dagger Hilt** для впровадження залежностей. `GameRepository` виступає єдиним джерелом правди (Single Source of Truth) для збереження даних гравця через **DataStore**. Ці дані реактивно передаються у ViewModels за допомогою `StateFlow`, що забезпечує миттєве оновлення UI без додаткових запитів.
+Додаток використовує **Dagger Hilt** для впровадження залежностей. `GameRepository` виступає єдиним джерелом правди для збереження даних гравця через **DataStore**. Ці дані реактивно передаються у ViewModels за допомогою `StateFlow`, що забезпечує миттєве оновлення UI без додаткових запитів.
 
 ## 📦 Як запустити локально
 
