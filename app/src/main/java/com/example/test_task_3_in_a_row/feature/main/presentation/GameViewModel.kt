@@ -9,6 +9,7 @@ import com.example.test_task_3_in_a_row.feature.main.presentation.domain.LevelGo
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -21,7 +22,6 @@ class GameViewModel : ViewModel() {
     private val _board = MutableStateFlow<List<List<Cell>>>(emptyList())
     val board: StateFlow<List<List<Cell>>> = _board.asStateFlow()
 
-    // Стан для підказки (зберігає пару клітинок, які можна поміняти)
     private val _hintCells = MutableStateFlow<Pair<Cell, Cell>?>(null)
     val hintCells: StateFlow<Pair<Cell, Cell>?> = _hintCells.asStateFlow()
 
@@ -33,6 +33,12 @@ class GameViewModel : ViewModel() {
 
     private val _score = MutableStateFlow<Int>(0)
     val score: StateFlow<Int> = _score.asStateFlow()
+
+    private val _levelPassedSignal = MutableStateFlow<Boolean>(false)
+    val levelPassedSignal = _levelPassedSignal.asSharedFlow()
+
+    private val _levelFailedSignal = MutableStateFlow<Boolean>(false)
+    val levelFailedSignal = _levelFailedSignal.asSharedFlow()
 
     init {
         generateBoard()
@@ -59,7 +65,6 @@ class GameViewModel : ViewModel() {
     fun hint() {
         val currentBoard = _board.value
 
-        // Перевіряємо горизонтальні обміни
         for (r in 0 until rows) {
             for (c in 0 until cols - 1) {
                 if (simulatedSwapHasMatches(currentBoard, r, c, r, c + 1)) {
@@ -81,7 +86,6 @@ class GameViewModel : ViewModel() {
         shuffleBoard()
     }
 
-    // 2. Метод для ініціалізації рівня (викликається один раз при старті екрану)
     fun initLevel(levelGoals: List<LevelGoal>, moves: Int) {
         if (_goals.value.isEmpty()) {
             _goals.value = levelGoals
@@ -91,8 +95,6 @@ class GameViewModel : ViewModel() {
             _moves.value = moves
         }
     }
-
-    // ... init, generateBoard, shuffleBoard, hint ...
 
     fun swapCubes(cell1: Cell, cell2: Cell) {
         if (!checkNeighbours(cell1, cell2)) return
@@ -112,6 +114,9 @@ class GameViewModel : ViewModel() {
             } else {
                 _hintCells.value = null
                 _moves.value -= 1
+                if (_moves.value == 0){
+                    _levelFailedSignal.value = true
+                }
 
                 var comboMultiplier = 1
 
@@ -136,24 +141,19 @@ class GameViewModel : ViewModel() {
         }
     }
 
-    // 3. НОВЕ: Метод для зменшення кількості цілей
     private fun updateGoals(board: List<List<Cell>>, matches: Set<Pair<Int, Int>>) {
         val currentGoals = _goals.value.toMutableList()
         var goalsChanged = false
 
-        // Отримуємо список типів кубиків, які щойно зібралися в лінію
         val destroyedTypes = matches.map { (r, c) -> board[r][c].type }
 
         for (i in currentGoals.indices) {
             val goal = currentGoals[i]
 
-            // Рахуємо, скільки кубиків цього типу було знищено
             val destroyedCount = destroyedTypes.count { it == goal.type }
 
             if (destroyedCount > 0 && goal.count > 0) {
-                // Зменшуємо ціль, але не нижче нуля
                 val newCount = max(0, goal.count - destroyedCount)
-                // Важливо: LevelGoal має бути data class, щоб працював метод .copy()
                 currentGoals[i] = goal.copy(count = newCount)
                 goalsChanged = true
             }
@@ -162,8 +162,17 @@ class GameViewModel : ViewModel() {
         if (goalsChanged) {
             _goals.value = currentGoals
 
-            // Опціонально: Тут можна перевірити, чи всі цілі досягнуті (count == 0)
-            // і якщо так - викликати подію перемоги!
+            var isWin: Boolean = false
+
+            currentGoals.forEach { goal ->
+                if (goal.count == 0){
+                    isWin = true
+                }
+                else isWin = false
+            }
+            if (isWin){
+                _levelPassedSignal.value = true
+            }
         }
     }
 
