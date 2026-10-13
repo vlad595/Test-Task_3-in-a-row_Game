@@ -21,9 +21,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.test_task_3_in_a_row.data.models.ItemState
+import com.example.test_task_3_in_a_row.data.models.ShopItem
+import com.example.test_task_3_in_a_row.data.models.ShopItemTheme
+import com.example.test_task_3_in_a_row.ui.shared.Header
+import com.example.test_task_3_in_a_row.viewModels.ShopViewModel
 
 @Composable
 fun ShopScreen(
@@ -40,12 +46,10 @@ fun ShopScreen(
             .padding(top = 48.dp, start = 16.dp, end = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Шапка (Кнопка назад + Баланс)
-        ShopHeader(coins = coins, onBackClick = onBackClick)
+        Header(money = coins, onBackClick = onBackClick)
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Заголовок SHOP
         Text(
             text = "SHOP",
             color = Color.White,
@@ -63,7 +67,6 @@ fun ShopScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Сітка предметів
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -87,7 +90,6 @@ fun ShopHeader(coins: Int, onBackClick: () -> Unit) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Кнопка назад
         Box(
             modifier = Modifier
                 .size(48.dp)
@@ -103,7 +105,6 @@ fun ShopHeader(coins: Int, onBackClick: () -> Unit) {
             )
         }
 
-        // Баланс монет
         Row(
             modifier = Modifier
                 .background(Color(0xFF220E0A), RoundedCornerShape(50.dp))
@@ -146,7 +147,6 @@ fun ShopItemCard(item: ShopItem, onClick: () -> Unit) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Композиція кубиків
         ShopItemCluster(theme = item.theme)
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -161,7 +161,6 @@ fun ShopItemCard(item: ShopItem, onClick: () -> Unit) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Відображення статусу (Equipped, Owned, Price)
         when (item.state) {
             ItemState.EQUIPPED -> StatusBadge(text = "EQUIPPED", isGreen = true)
             ItemState.OWNED -> StatusBadge(text = "OWNED", isGreen = true)
@@ -170,31 +169,53 @@ fun ShopItemCard(item: ShopItem, onClick: () -> Unit) {
     }
 }
 
-// Імітація 3-х кубиків з дизайну
 @Composable
 fun ShopItemCluster(theme: ShopItemTheme) {
     Box(modifier = Modifier.size(80.dp), contentAlignment = Alignment.Center) {
-        // Лівий нижній кубик
         Box(
             modifier = Modifier
                 .offset(x = (-24).dp, y = 12.dp)
                 .size(32.dp)
-                .background(theme.leftColor, RoundedCornerShape(8.dp))
-        )
-        // Правий нижній кубик
+                .background(theme.leftColor, RoundedCornerShape(8.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = theme.leftIcon,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(16.dp)
+            )
+        }
+
         Box(
             modifier = Modifier
                 .offset(x = 24.dp, y = 12.dp)
                 .size(32.dp)
-                .background(theme.rightColor, RoundedCornerShape(8.dp))
-        )
-        // Головний центральний кубик
+                .background(theme.rightColor, RoundedCornerShape(8.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = theme.rightIcon,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(16.dp)
+            )
+        }
+
         Box(
             modifier = Modifier
                 .offset(y = (-10).dp)
                 .size(48.dp)
-                .background(theme.mainColor, RoundedCornerShape(12.dp))
-        )
+                .background(theme.mainColor, RoundedCornerShape(12.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = theme.mainIcon,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(28.dp)
+            )
+        }
     }
 }
 
@@ -235,7 +256,7 @@ fun PriceBadge(price: Int) {
                 ),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "$", color = Color(0xFF5A3E00), fontSize = 10.sp, fontWeight = FontWeight.Bold)
+            Text(text = "$", color = Color(0xFF5A3E00), fontSize = 10.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxSize())
         }
         Spacer(modifier = Modifier.width(6.dp))
         Text(

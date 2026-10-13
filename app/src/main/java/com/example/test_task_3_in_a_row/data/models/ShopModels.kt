@@ -1,6 +1,7 @@
 package com.example.test_task_3_in_a_row.data.models
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 
 enum class ItemState {
     EQUIPPED,
@@ -10,8 +11,11 @@ enum class ItemState {
 
 data class ShopItemTheme(
     val mainColor: Color,
+    val mainIcon: ImageVector,
     val leftColor: Color,
-    val rightColor: Color
+    val leftIcon: ImageVector,
+    val rightColor: Color,
+    val rightIcon: ImageVector
 )
 
 data class ShopItem(

@@ -7,10 +7,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.test_task_3_in_a_row.data.models.Screen
 import com.example.test_task_3_in_a_row.ui.screens.home.MainScreen
 import com.example.test_task_3_in_a_row.ui.screens.levels.LevelsScreen
 import com.example.test_task_3_in_a_row.ui.screens.main.GameScreen
 import com.example.test_task_3_in_a_row.data.models.generateLevels
+import com.example.test_task_3_in_a_row.ui.screens.shop.ShopScreen
 
 @Composable
 fun AppNavigation() {
@@ -27,7 +29,7 @@ fun AppNavigation() {
             MainScreen(
                 onPlayClick = { navController.navigate(Screen.Game.createRoute(passedLevels.size)) },
                 onLevelsClick = { navController.navigate(Screen.Levels.route)},
-                onShopClick = {}
+                onShopClick = { navController.navigate(Screen.Shop.route) }
             )
         }
 
@@ -58,5 +60,12 @@ fun AppNavigation() {
                 navController = navController
             )
         }
+
+        composable(route = Screen.Shop.route) {
+            ShopScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
     }
 }

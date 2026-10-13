@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.ui.graphics.Brush
 
 @Composable
 fun Header(money: Int, levelNumber: Int = 0, isMainScreen: Boolean = false, modifier: Modifier = Modifier, onBackClick: () -> Unit) {
@@ -81,7 +82,7 @@ fun MoneyLabel(money: Int){
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.background(color = Color(0xFF210C0A), shape = RoundedCornerShape(28.dp)).padding(4.dp)
     ) {
-        Box(modifier = Modifier.size(32.dp).background(color = Color(0xFFE0A024), shape = RoundedCornerShape(26.dp))){
+        Box(modifier = Modifier.size(32.dp).background(brush = Brush.verticalGradient(listOf(Color(0xFFFFF1A1), Color(0xFFDCA825))), shape = RoundedCornerShape(26.dp))){
             Text(
                text = "$",
                 modifier = Modifier.align(Alignment.Center),

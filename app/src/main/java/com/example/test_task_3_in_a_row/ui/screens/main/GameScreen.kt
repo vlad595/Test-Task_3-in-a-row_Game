@@ -30,7 +30,7 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.animation.core.*
 import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
-import com.example.test_task_3_in_a_row.core.navigation.Screen
+import com.example.test_task_3_in_a_row.data.models.Screen
 import com.example.test_task_3_in_a_row.ui.shared.LevelCompleteOverlay
 import com.example.test_task_3_in_a_row.ui.shared.LevelFailedOverlay
 import com.example.test_task_3_in_a_row.ui.shared.PauseOverlay
