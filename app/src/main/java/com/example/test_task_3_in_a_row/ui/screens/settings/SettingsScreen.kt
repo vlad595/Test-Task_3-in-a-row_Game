@@ -26,13 +26,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.test_task_3_in_a_row.ui.shared.Header
 import com.example.test_task_3_in_a_row.viewModels.SettingsViewModel
 
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsViewModel = viewModel(),
+    viewModel: SettingsViewModel,
     onBackClick: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -286,5 +285,5 @@ fun SettingsActionItem(
 @Preview(showBackground = true)
 @Composable
 fun SettingsScreenPreview() {
-    SettingsScreen(onBackClick = {})
+    // ViewModel previews are supplied by the navigation host, not instantiated here.
 }

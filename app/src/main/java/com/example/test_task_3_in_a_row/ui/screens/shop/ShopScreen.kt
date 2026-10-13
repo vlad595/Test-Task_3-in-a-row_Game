@@ -24,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.test_task_3_in_a_row.data.models.ItemState
 import com.example.test_task_3_in_a_row.data.models.ShopItem
 import com.example.test_task_3_in_a_row.data.models.ShopItemTheme
@@ -33,7 +32,7 @@ import com.example.test_task_3_in_a_row.viewModels.ShopViewModel
 
 @Composable
 fun ShopScreen(
-    viewModel: ShopViewModel = viewModel(),
+    viewModel: ShopViewModel,
     onBackClick: () -> Unit
 ) {
     val items by viewModel.items.collectAsState()
