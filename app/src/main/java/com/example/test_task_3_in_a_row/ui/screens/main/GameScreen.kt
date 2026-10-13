@@ -141,7 +141,7 @@ fun GameScreen(
         PauseOverlay(
             onResumeClick = { pauseClicked = false },
             onRestartClick = { navController.navigate(Screen.Game.createRoute(levelNumber)) },
-            onSettingsClick = {},
+            onSettingsClick = { navController.navigate(Screen.Settings.route) },
             onHomeClick = { navController.navigate((Screen.Main.route)) },
             onDismiss = {}
         )

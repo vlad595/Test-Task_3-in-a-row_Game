@@ -12,6 +12,7 @@ import com.example.test_task_3_in_a_row.ui.screens.home.MainScreen
 import com.example.test_task_3_in_a_row.ui.screens.levels.LevelsScreen
 import com.example.test_task_3_in_a_row.ui.screens.main.GameScreen
 import com.example.test_task_3_in_a_row.data.models.generateLevels
+import com.example.test_task_3_in_a_row.ui.screens.settings.SettingsScreen
 import com.example.test_task_3_in_a_row.ui.screens.shop.ShopScreen
 
 @Composable
@@ -63,6 +64,12 @@ fun AppNavigation() {
 
         composable(route = Screen.Shop.route) {
             ShopScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(route = Screen.Settings.route){
+            SettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
