@@ -31,7 +31,7 @@ val YellowBlock = Color(0xFFE4BC4B)
 val PurpleBlock = Color(0xFF9B63E7)
 
 @Composable
-fun MainScreen(onPlayClick: () -> Unit, onLevelsClick: () -> Unit, onShopClick: () -> Unit, onSunButtonClick: () -> Unit, onStarButtonClick: () -> Unit) {
+fun MainScreen(money: Int, onPlayClick: () -> Unit, onLevelsClick: () -> Unit, onShopClick: () -> Unit, onSunButtonClick: () -> Unit, onStarButtonClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -39,7 +39,7 @@ fun MainScreen(onPlayClick: () -> Unit, onLevelsClick: () -> Unit, onShopClick: 
             .padding(top = 48.dp, bottom = 24.dp, start = 16.dp, end = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Header(1250, isMainScreen = true, onBackClick = { }, onSunButtonClick = onSunButtonClick, onStarButtonClick = onStarButtonClick)
+        Header(money, isMainScreen = true, onBackClick = { }, onSunButtonClick = onSunButtonClick, onStarButtonClick = onStarButtonClick)
 
         Spacer(modifier = Modifier.weight(0.8f))
 
@@ -84,8 +84,8 @@ fun MainScreen(onPlayClick: () -> Unit, onLevelsClick: () -> Unit, onShopClick: 
             verticalAlignment = Alignment.CenterVertically
         ) {
             GameBlock(color = RedBlock, icon = Icons.Default.Star)
-            GameBlock(color = BlueBlock, icon = Icons.Default.ChangeHistory) // Трикутник
-            GameBlock(color = GreenBlock, icon = Icons.Default.RadioButtonUnchecked) // Коло
+            GameBlock(color = BlueBlock, icon = Icons.Default.ChangeHistory)
+            GameBlock(color = GreenBlock, icon = Icons.Default.RadioButtonUnchecked)
             GameBlock(color = YellowBlock, icon = Icons.Default.Hexagon)
             GameBlock(color = PurpleBlock, icon = Icons.Default.Add)
         }
@@ -169,7 +169,6 @@ fun MenuButton(
             .height(height)
             .clip(RoundedCornerShape(32.dp))
             .background(color)
-            // Імітація внутрішнього світіння/об'єму
             .border(3.dp, Color.White.copy(alpha = 0.1f), RoundedCornerShape(32.dp))
             .clickable { onClick() },
         contentAlignment = Alignment.Center
@@ -219,5 +218,5 @@ fun DailyRewardButton() {
 @Preview(showSystemUi = true)
 @Composable
 fun MainScreenPreview() {
-    MainScreen(onPlayClick = {}, onShopClick = {}, onLevelsClick = {}, onStarButtonClick = {}, onSunButtonClick = {})
+    MainScreen(money = 1250, onPlayClick = {}, onShopClick = {}, onLevelsClick = {}, onStarButtonClick = {}, onSunButtonClick = {})
 }

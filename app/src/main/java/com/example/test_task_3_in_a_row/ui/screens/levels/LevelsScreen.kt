@@ -100,7 +100,7 @@ fun LevelsScreen(
                     status = status,
                     stars = stars,
                     onClick = {
-                        onLevelClick(index)
+                        onLevelClick(levelNum)
                     }
                 )
             }

@@ -19,6 +19,7 @@ import com.example.test_task_3_in_a_row.ui.screens.settings.SettingsScreen
 import com.example.test_task_3_in_a_row.ui.screens.shop.ShopScreen
 import com.example.test_task_3_in_a_row.viewModels.*
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.test_task_3_in_a_row.ui.screens.webview.WebViewScreen
 
 @Composable
 fun AppNavigation() {
@@ -28,11 +29,17 @@ fun AppNavigation() {
     NavHost(navController = navController, startDestination = Screen.Main.route) {
 
         composable(Screen.Main.route) {
+            val viewModel: LevelsViewModel = hiltViewModel()
+            val coins by viewModel.coins.collectAsState()
+            val completedLevels by viewModel.completedLevels.collectAsState()
+            val nextLevel = (completedLevels + 1).coerceIn(1, levels.size)
+
             MainScreen(
-                onPlayClick = { navController.navigate(Screen.Levels.route) },
+                money = coins,
+                onPlayClick = { navController.navigate(Screen.Game.createRoute(nextLevel)) },
                 onLevelsClick = { navController.navigate(Screen.Levels.route)},
                 onShopClick = { navController.navigate(Screen.Shop.route) },
-                onStarButtonClick = { navController.navigate(Screen.Settings.route) },
+                onStarButtonClick = { navController.navigate(Screen.WebView.route) },
                 onSunButtonClick = { navController.navigate(Screen.Profile.route) }
             )
         }
@@ -96,6 +103,10 @@ fun AppNavigation() {
                 viewModel = viewModel,
                 onBackClick = { navController.popBackStack() }
             )
+        }
+
+        composable(route = Screen.WebView.route){
+            WebViewScreen("https://lk.nsq.market/ru/tools/testing", onBackToApp = {navController.popBackStack()})
         }
     }
 }

@@ -35,7 +35,7 @@ class ProfileViewModel @Inject constructor(private val repository: GameRepositor
             userLevel = if (levels == 0) 1 else levels,
             levelsCompleted = levels,
             bestScore = bestScore,
-            totalCoinsEarned = coins // Можна додати окремий лічильник в репозиторій
+            totalCoinsEarned = coins
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ProfileState())
 
