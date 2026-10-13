@@ -1,10 +1,12 @@
 package com.example.test_task_3_in_a_row.viewModels
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import androidx.lifecycle.viewModelScope
+import com.example.test_task_3_in_a_row.data.repository.GameRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class SettingsUiState(
     val coins: Int = 1250,
@@ -15,31 +17,30 @@ data class SettingsUiState(
     val language: String = "EN"
 )
 
-class SettingsViewModel : ViewModel() {
-    private val _uiState = MutableStateFlow(SettingsUiState())
-    val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
+@HiltViewModel
+class SettingsViewModel @Inject constructor(private val repository: GameRepository) : ViewModel() {
 
-    fun toggleMusic() {
-        _uiState.update { it.copy(isMusicEnabled = !it.isMusicEnabled) }
-    }
+    val uiState: StateFlow<SettingsUiState> = combine(
+        repository.coinsFlow,
+        repository.musicEnabledFlow,
+        repository.soundEnabledFlow,
+        repository.vibrationEnabledFlow,
+        repository.notificationsEnabledFlow,
+        repository.languageFlow
+    ) { args ->
+        SettingsUiState(
+            coins = args[0] as Int,
+            isMusicEnabled = args[1] as Boolean,
+            isSoundEffectsEnabled = args[2] as Boolean,
+            isVibrationEnabled = args[3] as Boolean,
+            isNotificationsEnabled = args[4] as Boolean,
+            language = args[5] as String
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SettingsUiState())
 
-    fun toggleSoundEffects() {
-        _uiState.update { it.copy(isSoundEffectsEnabled = !it.isSoundEffectsEnabled) }
-    }
-
-    fun toggleVibration() {
-        _uiState.update { it.copy(isVibrationEnabled = !it.isVibrationEnabled) }
-    }
-
-    fun toggleNotifications() {
-        _uiState.update { it.copy(isNotificationsEnabled = !it.isNotificationsEnabled) }
-    }
-
-    fun changeLanguage(newLang: String = "EN") {
-        _uiState.update { it.copy(language = newLang) }
-    }
-
-    fun restorePurchases() {
-        println("Restoring purchases...")
-    }
+    fun toggleMusic() = viewModelScope.launch { repository.setMusic(!uiState.value.isMusicEnabled) }
+    fun toggleSoundEffects() = viewModelScope.launch { repository.setSound(!uiState.value.isSoundEffectsEnabled) }
+    fun toggleVibration() = viewModelScope.launch { repository.setVibration(!uiState.value.isVibrationEnabled) }
+    fun toggleNotifications() = viewModelScope.launch { repository.setNotifications(!uiState.value.isNotificationsEnabled) }
+    fun changeLanguage(newLang: String = if (uiState.value.language == "EN") "UA" else "EN") = viewModelScope.launch { repository.setLanguage(newLang) }
 }
