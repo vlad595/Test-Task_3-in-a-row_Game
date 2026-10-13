@@ -29,20 +29,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.test_task_3_in_a_row.ui.theme.GameColors
 
 @Composable
 fun LevelCompleteOverlay(
     onNextLevelClick: () -> Unit,
     onRetryClick: () -> Unit,
     onHomeClick: () -> Unit,
-    onDismiss: () -> Unit,
-    coinsEarned: Int,
-    score: Int
+    onDismiss: () -> Unit
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.85f))
+            .background(GameColors.OverlayBackground)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
@@ -57,8 +56,8 @@ fun LevelCompleteOverlay(
                 ) {}
         ) {
             LevelCompleteCard(
-                score = score.toString(),
-                coins = "+$coinsEarned",
+                score = "12,480",
+                coins = "+250",
                 starsCount = 2,
                 onNextLevelClick = onNextLevelClick,
                 onRetryClick = onRetryClick,
@@ -84,18 +83,17 @@ fun LevelCompleteCard(
             .padding(top = 24.dp),
         contentAlignment = Alignment.TopCenter
     ) {
-        // Основний темний контейнер
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .background(
-                    color = Color(0xFF160808),
+                    color = GameColors.CardBackground,
                     shape = RoundedCornerShape(32.dp)
                 )
                 .border(
                     width = 1.5.dp,
-                    color = Color(0xFF7A362D),
+                    color = GameColors.CardBorder,
                     shape = RoundedCornerShape(32.dp)
                 )
                 .padding(horizontal = 24.dp, vertical = 32.dp),
@@ -110,23 +108,17 @@ fun LevelCompleteCard(
             ) {
                 StarIcon(
                     isLit = starsCount >= 1,
-                    modifier = Modifier
-                        .size(45.dp)
-                        .padding(bottom = 8.dp)
+                    modifier = Modifier.size(45.dp).padding(bottom = 8.dp)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 StarIcon(
                     isLit = starsCount >= 2,
-                    modifier = Modifier
-                        .size(65.dp)
-                        .padding(bottom = 16.dp)
+                    modifier = Modifier.size(65.dp).padding(bottom = 16.dp)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 StarIcon(
                     isLit = starsCount >= 3,
-                    modifier = Modifier
-                        .size(45.dp)
-                        .padding(bottom = 8.dp)
+                    modifier = Modifier.size(45.dp).padding(bottom = 8.dp)
                 )
             }
 
@@ -134,7 +126,7 @@ fun LevelCompleteCard(
 
             Text(
                 text = "FINAL SCORE",
-                color = Color(0xFFA57D71),
+                color = GameColors.ScoreLabelText,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.5.sp
@@ -142,7 +134,7 @@ fun LevelCompleteCard(
 
             Text(
                 text = score,
-                color = Color(0xFFFFF2EB),
+                color = GameColors.ScoreValueText,
                 fontSize = 36.sp,
                 fontWeight = FontWeight.ExtraBold,
                 modifier = Modifier.padding(vertical = 4.dp)
@@ -152,7 +144,7 @@ fun LevelCompleteCard(
 
             Row(
                 modifier = Modifier
-                    .background(Color(0xFF220E0A), RoundedCornerShape(50.dp))
+                    .background(GameColors.CoinsContainerBackground, RoundedCornerShape(50.dp))
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -161,7 +153,7 @@ fun LevelCompleteCard(
                         .size(24.dp)
                         .background(
                             brush = Brush.verticalGradient(
-                                colors = listOf(Color(0xFFFFF1A1), Color(0xFFDCA825))
+                                colors = listOf(GameColors.CoinIconGradientStart, GameColors.CoinIconGradientEnd)
                             ),
                             shape = RoundedCornerShape(50.dp)
                         ),
@@ -169,7 +161,7 @@ fun LevelCompleteCard(
                 ) {
                     Text(
                         text = "$",
-                        color = Color(0xFF5A3E00),
+                        color = GameColors.CoinSymbolText,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -177,7 +169,7 @@ fun LevelCompleteCard(
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
                     text = coins,
-                    color = Color(0xFFF0B33A),
+                    color = GameColors.CoinsValueText,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -191,17 +183,17 @@ fun LevelCompleteCard(
                     .shadow(
                         elevation = 8.dp,
                         shape = RoundedCornerShape(24.dp),
-                        ambientColor = Color(0xFFD34F30),
-                        spotColor = Color(0xFFD34F30)
+                        ambientColor = GameColors.PrimaryButtonShadow,
+                        spotColor = GameColors.PrimaryButtonShadow
                     )
                     .background(
                         brush = Brush.verticalGradient(
-                            colors = listOf(Color(0xFFB53F2E), Color(0xFF5F1E15))
+                            colors = listOf(GameColors.PrimaryButtonGradientStart, GameColors.PrimaryButtonGradientEnd)
                         ),
                         shape = RoundedCornerShape(24.dp)
                     )
                     .clickable { onNextLevelClick() }
-                    .padding(vertical = 4.dp), // Для створення 3D-бордюру
+                    .padding(vertical = 4.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Box(
@@ -209,12 +201,12 @@ fun LevelCompleteCard(
                         .fillMaxWidth(0.9f)
                         .height(14.dp)
                         .align(Alignment.TopCenter)
-                        .background(Color.White.copy(alpha = 0.15f), RoundedCornerShape(50.dp))
+                        .background(GameColors.PrimaryButtonHighlight, RoundedCornerShape(50.dp))
                 )
 
                 Text(
                     text = "NEXT LEVEL",
-                    color = Color.White,
+                    color = GameColors.PrimaryButtonText,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(vertical = 12.dp)
@@ -247,30 +239,30 @@ fun LevelCompleteCard(
                     elevation = 12.dp,
                     shape = RoundedCornerShape(16.dp),
                     clip = false,
-                    ambientColor = Color(0xFFB53F2E),
-                    spotColor = Color(0xFFB53F2E)
+                    ambientColor = GameColors.HeaderShadow,
+                    spotColor = GameColors.HeaderShadow
                 )
                 .background(
                     brush = Brush.verticalGradient(
-                        colors = listOf(Color(0xFFB33227), Color(0xFF6C1914))
+                        colors = listOf(GameColors.HeaderGradientStart, GameColors.HeaderGradientEnd)
                     ),
                     shape = RoundedCornerShape(16.dp)
                 )
-                .border(2.dp, Color(0xFFD54F3F), RoundedCornerShape(16.dp))
+                .border(2.dp, GameColors.HeaderBorder, RoundedCornerShape(16.dp))
                 .padding(horizontal = 40.dp, vertical = 10.dp),
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = "LEVEL",
-                    color = Color(0xFFFF9C8A),
+                    color = GameColors.HeaderLabelText,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 1.sp
                 )
                 Text(
                     text = "COMPLETE",
-                    color = Color.White,
+                    color = GameColors.HeaderTitleText,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.ExtraBold,
                     letterSpacing = 0.5.sp
@@ -291,19 +283,19 @@ fun StarIcon(isLit: Boolean, modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .size(45.dp)
                     .blur(16.dp)
-                    .background(Color(0xFFFFD43F).copy(alpha = 0.5f), RoundedCornerShape(50.dp))
+                    .background(GameColors.StarGlow, RoundedCornerShape(50.dp))
             )
             Icon(
                 imageVector = Icons.Default.Star,
                 contentDescription = "Lit Star",
-                tint = Color(0xFFFFD13B),
+                tint = GameColors.StarLit,
                 modifier = Modifier.fillMaxSize()
             )
         } else {
             Icon(
                 imageVector = Icons.Default.Star,
                 contentDescription = "Unlit Star",
-                tint = Color(0xFF331613),
+                tint = GameColors.StarUnlit,
                 modifier = Modifier.fillMaxSize()
             )
         }
@@ -320,11 +312,11 @@ fun SmallGameButton(
         modifier = modifier
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(Color(0xFF421C16), Color(0xFF200C09))
+                    colors = listOf(GameColors.SecondaryButtonGradientStart, GameColors.SecondaryButtonGradientEnd)
                 ),
                 shape = RoundedCornerShape(16.dp)
             )
-            .border(1.dp, Color(0xFF5D2821), RoundedCornerShape(16.dp))
+            .border(1.dp, GameColors.SecondaryButtonBorder, RoundedCornerShape(16.dp))
             .clickable { onClick() }
             .padding(vertical = 4.dp),
         contentAlignment = Alignment.Center
@@ -334,12 +326,12 @@ fun SmallGameButton(
                 .fillMaxWidth(0.85f)
                 .height(8.dp)
                 .align(Alignment.TopCenter)
-                .background(Color.White.copy(alpha = 0.08f), RoundedCornerShape(50.dp))
+                .background(GameColors.SecondaryButtonHighlight, RoundedCornerShape(50.dp))
         )
 
         Text(
             text = text,
-            color = Color(0xFFE6C0B4),
+            color = GameColors.SecondaryButtonText,
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(vertical = 8.dp)
@@ -355,9 +347,7 @@ fun LevelCompleteOverlayPreview() {
             onNextLevelClick = {},
             onRetryClick = {},
             onHomeClick = {},
-            onDismiss = {},
-            243,
-            1256
+            onDismiss = {}
         )
     }
 }

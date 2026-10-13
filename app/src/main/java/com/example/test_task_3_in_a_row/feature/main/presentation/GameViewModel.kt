@@ -167,20 +167,15 @@ class GameViewModel : ViewModel() {
         }
     }
 
-    // Виправлений метод перевірки сусідів
     fun checkNeighbours(cell1: Cell, cell2: Cell): Boolean {
         val rowDiff = abs(cell1.row - cell2.row)
         val colDiff = abs(cell1.col - cell2.col)
-        // Кубики є сусідами лише по вертикалі АБО горизонталі (сума різниць рівно 1)
-        // Це автоматично відкидає діагоналі (де сума = 2) та однакові клітинки (де сума = 0)
+
         return (rowDiff + colDiff) == 1
     }
 
-    // --- Допоміжні внутрішні методи ---
-
     private fun swapInBoard(board: MutableList<MutableList<Cell>>, r1: Int, c1: Int, r2: Int, c2: Int) {
         val temp = board[r1][c1]
-        // Важливо: використовуємо .copy(), щоб оновити row та col всередині об'єкта
         board[r1][c1] = board[r2][c2].copy(row = r1, col = c1)
         board[r2][c2] = temp.copy(row = r2, col = c2)
     }
@@ -191,11 +186,9 @@ class GameViewModel : ViewModel() {
         return findMatches(tempBoard).isNotEmpty()
     }
 
-    // Шукає всі клітинки, які входять у комбінації "3 або більше в ряд"
     private fun findMatches(board: List<List<Cell>>): Set<Pair<Int, Int>> {
         val matchedCoords = mutableSetOf<Pair<Int, Int>>()
 
-        // Горизонтальні перевірки
         for (r in 0 until rows) {
             var matchLength = 1
             for (c in 1 until cols) {
@@ -213,7 +206,6 @@ class GameViewModel : ViewModel() {
             }
         }
 
-        // Вертикальні перевірки
         for (c in 0 until cols) {
             var matchLength = 1
             for (r in 1 until rows) {
@@ -234,20 +226,16 @@ class GameViewModel : ViewModel() {
         return matchedCoords
     }
 
-    // Алгоритм "гравітації"
     private fun removeMatchesAndDrop(board: MutableList<MutableList<Cell>>, matches: Set<Pair<Int, Int>>) {
         for (c in 0 until cols) {
             var emptySpaces = 0
-            // Йдемо знизу вгору по стовпцю
             for (r in rows - 1 downTo 0) {
                 if (matches.contains(Pair(r, c))) {
                     emptySpaces++
                 } else if (emptySpaces > 0) {
-                    // Зсуваємо існуючий кубик вниз на кількість знайдених порожнин під ним
                     board[r + emptySpaces][c] = board[r][c].copy(row = r + emptySpaces)
                 }
             }
-            // Заповнюємо верхні вільні місця (emptySpaces) новими кубиками
             for (r in 0 until emptySpaces) {
                 board[r][c] = Cell(row = r, col = c, type = CubeType.values().random())
             }
