@@ -46,7 +46,7 @@ fun GameScreen(
     navController: NavHostController
 ) {
     LaunchedEffect(Unit) {
-        viewModel.initLevel(initialGoals, moves)
+        viewModel.initLevel(levelId = levelNumber, levelGoals = initialGoals, moves = moves)
     }
     val board by viewModel.board.collectAsState()
     val hintCells by viewModel.hintCells.collectAsState()

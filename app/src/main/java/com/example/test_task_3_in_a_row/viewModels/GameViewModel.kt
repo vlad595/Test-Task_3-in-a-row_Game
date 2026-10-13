@@ -5,15 +5,21 @@ import androidx.lifecycle.viewModelScope
 import com.example.test_task_3_in_a_row.data.models.Cell
 import com.example.test_task_3_in_a_row.data.models.CubeType
 import com.example.test_task_3_in_a_row.data.models.LevelGoal
+import com.example.test_task_3_in_a_row.data.repository.GameRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
 
-class GameViewModel : ViewModel() {
+@HiltViewModel
+class GameViewModel @Inject constructor(private val repository: GameRepository) : ViewModel() {
     private val rows = 6
     private val cols = 6
 
@@ -37,6 +43,9 @@ class GameViewModel : ViewModel() {
 
     private val _levelFailedSignal = MutableStateFlow<Boolean>(false)
     val levelFailedSignal = _levelFailedSignal.asStateFlow()
+
+    val coins: StateFlow<Int> = repository.coinsFlow.stateIn(viewModelScope, SharingStarted.Lazily, 0)
+    private var currentLevelId: Int = 1
 
     init {
         generateBoard()
@@ -84,13 +93,28 @@ class GameViewModel : ViewModel() {
         shuffleBoard()
     }
 
-    fun initLevel(levelGoals: List<LevelGoal>, moves: Int) {
+    fun initLevel(levelId: Int, levelGoals: List<LevelGoal>, moves: Int) {
+        currentLevelId = levelId
         if (_goals.value.isEmpty()) {
             _goals.value = levelGoals
         }
 
         if (_moves.value == 0){
             _moves.value = moves
+        }
+    }
+
+    private fun onLevelWon() {
+        viewModelScope.launch {
+            val earnedScore = _score.value
+            val earnedCoins = earnedScore / 10
+
+            repository.updateCoins(earnedCoins)
+            repository.updateBestScore(earnedScore)
+            repository.completeLevel(currentLevelId)
+            repository.unlockAchievement("1")
+
+            _levelPassedSignal.value = true
         }
     }
 
@@ -169,7 +193,7 @@ class GameViewModel : ViewModel() {
                 else isWin = false
             }
             if (isWin){
-                _levelPassedSignal.value = true
+                onLevelWon()
             }
         }
     }
