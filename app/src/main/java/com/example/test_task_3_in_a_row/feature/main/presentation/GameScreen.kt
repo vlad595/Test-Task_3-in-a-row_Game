@@ -34,6 +34,7 @@ import com.example.test_task_3_in_a_row.core.navigation.Screen
 import com.example.test_task_3_in_a_row.feature.shared.LevelCompleteOverlay
 import com.example.test_task_3_in_a_row.feature.shared.LevelFailedCard
 import com.example.test_task_3_in_a_row.feature.shared.LevelFailedOverlay
+import com.example.test_task_3_in_a_row.feature.shared.PauseOverlay
 
 @Composable
 fun GameScreen(
@@ -61,6 +62,8 @@ fun GameScreen(
     val levelPassedSignal by viewModel.levelPassedSignal.collectAsState()
     val levelFailedSignal by viewModel.levelFailedSignal.collectAsState()
 
+    var pauseClicked by remember { mutableStateOf<Boolean>(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -68,7 +71,7 @@ fun GameScreen(
             .padding(top = 48.dp, bottom = 24.dp, start = 16.dp, end = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Header(money = money, levelNumber = levelNumber + 1, onBackClick = {})
+        Header(money = money, levelNumber = levelNumber + 1, onBackClick = { pauseClicked = true })
         Spacer(modifier = Modifier.height(24.dp))
 
         Row(
@@ -132,6 +135,15 @@ fun GameScreen(
             onLevelsClick = { navController.navigate((Screen.Levels.route)) },
             onDismiss = {},
             score = score
+        )
+    }
+    if(pauseClicked){
+        PauseOverlay(
+            onResumeClick = { pauseClicked = false },
+            onRestartClick = { navController.navigate(Screen.Game.createRoute(levelNumber)) },
+            onSettingsClick = {},
+            onHomeClick = { navController.navigate((Screen.Main.route)) },
+            onDismiss = {}
         )
     }
 }

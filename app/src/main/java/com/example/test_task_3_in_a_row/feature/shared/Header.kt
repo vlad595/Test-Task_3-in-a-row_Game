@@ -56,7 +56,7 @@ fun Header(money: Int, levelNumber: Int = 0, isMainScreen: Boolean = false, modi
             modifier = modifier.fillMaxWidth()
         ) {
             Box(modifier = Modifier.align(Alignment.CenterStart)) {
-                CustomIconButton(icon = Icons.Default.Pause, onClick = {})
+                CustomIconButton(icon = Icons.Default.Pause, onClick = onBackClick)
             }
 
             LevelLabel(
