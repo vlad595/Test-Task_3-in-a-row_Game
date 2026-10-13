@@ -32,6 +32,8 @@ import androidx.compose.runtime.*
 import androidx.navigation.NavHostController
 import com.example.test_task_3_in_a_row.core.navigation.Screen
 import com.example.test_task_3_in_a_row.feature.shared.LevelCompleteOverlay
+import com.example.test_task_3_in_a_row.feature.shared.LevelFailedCard
+import com.example.test_task_3_in_a_row.feature.shared.LevelFailedOverlay
 
 @Composable
 fun GameScreen(
@@ -124,7 +126,13 @@ fun GameScreen(
         )
     }
     if (levelFailedSignal){
-
+        LevelFailedOverlay(
+            onHomeClick = { navController.navigate((Screen.Main.route)) },
+            onRetryClick = { navController.navigate(Screen.Game.createRoute(levelNumber)) },
+            onLevelsClick = { navController.navigate((Screen.Levels.route)) },
+            onDismiss = {},
+            score = score
+        )
     }
 }
 
