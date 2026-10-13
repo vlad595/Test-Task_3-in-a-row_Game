@@ -36,14 +36,22 @@ fun GameScreen(
     levelNumber: Int,
     money: Int,
     moves: Int,
-    goals: List<LevelGoal>,
+    initialGoals: List<LevelGoal>,
     viewModel: GameViewModel = viewModel()
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.initLevel(initialGoals, moves)
+    }
     val board by viewModel.board.collectAsState()
-    val hintCells by viewModel.hintCells.collectAsState() // Отримуємо підказку
+    val hintCells by viewModel.hintCells.collectAsState()
 
-    // Стан для запам'ятовування вибраного кубика
+    val currentGoals by viewModel.goals.collectAsState()
+
     var selectedCell by remember { mutableStateOf<Cell?>(null) }
+
+    val _moves by viewModel.moves.collectAsState()
+
+    val score by viewModel.score.collectAsState()
 
     Column(
         modifier = Modifier
@@ -59,34 +67,30 @@ fun GameScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            InfoPanel(title = "SCORE", value = "12,480", modifier = Modifier.weight(1f))
-            InfoPanel(title = "MOVES", value = moves.toString(), modifier = Modifier.weight(1f))
+            InfoPanel(title = "SCORE", value = score.toString(), modifier = Modifier.weight(1f))
+            InfoPanel(title = "MOVES", value = _moves.toString(), modifier = Modifier.weight(1f))
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Оновлена ігрова дошка
         GameBoard(
             board = board,
             selectedCell = selectedCell,
             hintCells = hintCells,
             onCellClick = { clickedCell ->
                 if (selectedCell == null) {
-                    // Перший клік — виділяємо
                     selectedCell = clickedCell
                 } else {
-                    // Другий клік — намагаємося поміняти
                     if (selectedCell != clickedCell) {
                         viewModel.swapCubes(selectedCell!!, clickedCell)
                     }
-                    // Скидаємо виділення у будь-якому випадку
                     selectedCell = null
                 }
             }
         )
 
         Spacer(modifier = Modifier.weight(1f))
-        GoalPanel(goals = goals)
+        GoalPanel(goals = currentGoals)
         Spacer(modifier = Modifier.height(24.dp))
 
         Row(
@@ -105,7 +109,6 @@ fun GameScreen(
     }
 }
 
-// Допоміжний компонент для SCORE та MOVES[cite: 4]
 @Composable
 fun InfoPanel(title: String, value: String, modifier: Modifier = Modifier) {
     Column(
@@ -144,7 +147,6 @@ fun GameBoard(
             val isSelected = cell.id == selectedCell?.id
             val isHinted = cell.id == hintCells?.first?.id || cell.id == hintCells?.second?.id
 
-            // ГОЛОВНЕ: key() каже Compose відстежувати цей кубик за його унікальним ID
             key(cell.id) {
                 AnimatedCube(
                     cell = cell,
@@ -168,7 +170,6 @@ fun AnimatedCube(
     isHinted: Boolean,
     onClick: () -> Unit
 ) {
-    // Стан для анімації появи. Спочатку false (кубик "десь там"), потім миттєво стає true.
     var isSpawned by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -178,10 +179,8 @@ fun AnimatedCube(
     val targetOffsetX = cellWidth * cell.col
     val targetOffsetY = cellHeight * cell.row
 
-    // Якщо кубик новий (щойно згенерований зверху), він стартує на висоті 6 клітинок ВГОРУ від свого місця
     val startOffsetY = targetOffsetY - (cellHeight * 6)
 
-    // Анімація для осі X (свайпи вліво-вправо)
     val offsetX by animateDpAsState(
         targetValue = targetOffsetX,
         animationSpec = spring(
@@ -191,16 +190,12 @@ fun AnimatedCube(
         label = "x"
     )
 
-    // Анімація для осі Y (Падіння та свайпи вгору-вниз)
     val offsetY by animateDpAsState(
-        // Якщо він щойно з'явився у дереві, Compose почне його малювати зі startOffsetY
-        // і завдяки isSpawned=true плавно спустить до targetOffsetY
         targetValue = if (isSpawned) targetOffsetY else startOffsetY,
 
-        // Використовуємо Spring для крутого ефекту ваги кубика
         animationSpec = spring(
-            dampingRatio = 0.65f, // 0.65 дає дуже легенький, приємний відскік при приземленні
-            stiffness = Spring.StiffnessLow // Швидкість падіння
+            dampingRatio = 0.65f,
+            stiffness = Spring.StiffnessLow
         ),
         label = "y"
     )
@@ -217,7 +212,7 @@ fun AnimatedCube(
 
     Box(
         modifier = Modifier
-            .offset(x = offsetX, y = offsetY) // Анімовані координати
+            .offset(x = offsetX, y = offsetY)
             .size(width = cellWidth, height = cellHeight)
             .padding(2.dp)
     ) {
@@ -256,7 +251,6 @@ fun AnimatedCube(
     }
 }
 
-// Панель цілей (Goal)[cite: 4]
 @Composable
 fun GoalPanel(goals: List<LevelGoal>) {
     Row(
@@ -274,7 +268,6 @@ fun GoalPanel(goals: List<LevelGoal>) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    // Маленький кубик мети[cite: 4]
                     Box(
                         modifier = Modifier
                             .size(32.dp)
@@ -295,7 +288,6 @@ fun GoalPanel(goals: List<LevelGoal>) {
     }
 }
 
-// Кнопки дій (HINT / SHUFFLE)[cite: 4]
 @Composable
 fun ActionButton(text: String, color: Color, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Box(

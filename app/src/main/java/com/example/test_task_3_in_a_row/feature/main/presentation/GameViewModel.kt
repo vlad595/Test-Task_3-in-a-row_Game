@@ -1,15 +1,18 @@
 package com.example.test_task_3_in_a_row.feature.main.presentation
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.test_task_3_in_a_row.feature.main.presentation.domain.Cell
 import com.example.test_task_3_in_a_row.feature.main.presentation.domain.CubeType
+import com.example.test_task_3_in_a_row.feature.main.presentation.domain.LevelGoal
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.math.abs
+import kotlin.math.max
 
 class GameViewModel : ViewModel() {
     private val rows = 6
@@ -21,6 +24,15 @@ class GameViewModel : ViewModel() {
     // Стан для підказки (зберігає пару клітинок, які можна поміняти)
     private val _hintCells = MutableStateFlow<Pair<Cell, Cell>?>(null)
     val hintCells: StateFlow<Pair<Cell, Cell>?> = _hintCells.asStateFlow()
+
+    private val _goals = MutableStateFlow<List<LevelGoal>>(emptyList())
+    val goals: StateFlow<List<LevelGoal>> = _goals.asStateFlow()
+
+    private val _moves = MutableStateFlow<Int>(0)
+    val moves: StateFlow<Int> = _moves.asStateFlow()
+
+    private val _score = MutableStateFlow<Int>(0)
+    val score: StateFlow<Int> = _score.asStateFlow()
 
     init {
         generateBoard()
@@ -69,36 +81,89 @@ class GameViewModel : ViewModel() {
         shuffleBoard()
     }
 
+    // 2. Метод для ініціалізації рівня (викликається один раз при старті екрану)
+    fun initLevel(levelGoals: List<LevelGoal>, moves: Int) {
+        if (_goals.value.isEmpty()) {
+            _goals.value = levelGoals
+        }
+
+        if (_moves.value == 0){
+            _moves.value = moves
+        }
+    }
+
+    // ... init, generateBoard, shuffleBoard, hint ...
+
     fun swapCubes(cell1: Cell, cell2: Cell) {
         if (!checkNeighbours(cell1, cell2)) return
 
         viewModelScope.launch {
             var currentBoard = _board.value.map { it.toMutableList() }.toMutableList()
 
-            // Виконуємо обмін
             swapInBoard(currentBoard, cell1.row, cell1.col, cell2.row, cell2.col)
-            _board.value = currentBoard.map { it.toList() } // Оновлюємо UI
+            _board.value = currentBoard.map { it.toList() }
 
             var matches = findMatches(currentBoard)
 
             if (matches.isEmpty()) {
-                // Якщо хід не дав "3 в ряд", повертаємо кубики назад через коротку затримку
                 delay(300)
                 swapInBoard(currentBoard, cell1.row, cell1.col, cell2.row, cell2.col)
                 _board.value = currentBoard.map { it.toList() }
             } else {
-                // Якщо хід валідний, скидаємо підказку і запускаємо ланцюгову реакцію
                 _hintCells.value = null
+                _moves.value -= 1
+
+                var comboMultiplier = 1
 
                 while (matches.isNotEmpty()) {
-                    delay(300) // Затримка, щоб гравець побачив лінію, що зібралась
+                    delay(300)
+
+                    val basePointsPerCube = 10
+                    val extraLengthBonus = if (matches.size > 3) (matches.size - 3) * 20 else 0
+
+                    val pointsEarned = ((matches.size * basePointsPerCube) + extraLengthBonus) * comboMultiplier
+                    _score.value += pointsEarned
+
+                    updateGoals(currentBoard, matches)
+
                     removeMatchesAndDrop(currentBoard, matches)
                     _board.value = currentBoard.map { it.toList() }
 
-                    // Перевіряємо, чи після падіння нових кубиків не утворилися нові лінії
                     matches = findMatches(currentBoard)
+                    comboMultiplier++
                 }
             }
+        }
+    }
+
+    // 3. НОВЕ: Метод для зменшення кількості цілей
+    private fun updateGoals(board: List<List<Cell>>, matches: Set<Pair<Int, Int>>) {
+        val currentGoals = _goals.value.toMutableList()
+        var goalsChanged = false
+
+        // Отримуємо список типів кубиків, які щойно зібралися в лінію
+        val destroyedTypes = matches.map { (r, c) -> board[r][c].type }
+
+        for (i in currentGoals.indices) {
+            val goal = currentGoals[i]
+
+            // Рахуємо, скільки кубиків цього типу було знищено
+            val destroyedCount = destroyedTypes.count { it == goal.type }
+
+            if (destroyedCount > 0 && goal.count > 0) {
+                // Зменшуємо ціль, але не нижче нуля
+                val newCount = max(0, goal.count - destroyedCount)
+                // Важливо: LevelGoal має бути data class, щоб працював метод .copy()
+                currentGoals[i] = goal.copy(count = newCount)
+                goalsChanged = true
+            }
+        }
+
+        if (goalsChanged) {
+            _goals.value = currentGoals
+
+            // Опціонально: Тут можна перевірити, чи всі цілі досягнуті (count == 0)
+            // і якщо так - викликати подію перемоги!
         }
     }
 

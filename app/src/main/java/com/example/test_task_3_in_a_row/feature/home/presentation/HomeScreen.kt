@@ -29,7 +29,7 @@ val YellowBlock = Color(0xFFE4BC4B)
 val PurpleBlock = Color(0xFF9B63E7)
 
 @Composable
-fun MainScreen(onPlayClick: () -> Unit) {
+fun MainScreen(onPlayClick: () -> Unit, onLevelsClick: () -> Unit, onShopClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -37,17 +37,13 @@ fun MainScreen(onPlayClick: () -> Unit) {
             .padding(top = 48.dp, bottom = 24.dp, start = 16.dp, end = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 1. Наш Header
         Header(1250, isMainScreen = true, onBackClick = { })
 
         Spacer(modifier = Modifier.weight(0.8f))
 
-        // 2. Логотип (згруповані фішки)
         HeroLogoGroup()
 
         Spacer(modifier = Modifier.height(24.dp))
-
-        // 3. Заголовки
         Text(
             text = "PAINITE",
             color = Color.White,
@@ -65,7 +61,6 @@ fun MainScreen(onPlayClick: () -> Unit) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Маленька плашка "SWAP • MATCH"
         Box(
             modifier = Modifier
                 .background(Color(0xFF261210), RoundedCornerShape(16.dp))
@@ -82,7 +77,6 @@ fun MainScreen(onPlayClick: () -> Unit) {
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // 4. Ряд фішок
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -96,21 +90,18 @@ fun MainScreen(onPlayClick: () -> Unit) {
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // 5. Кнопки меню
         MenuButton(onClick = { onPlayClick() }, text = "PLAY", color = Color(0xFFA12921), height = 72.dp, fontSize = 24.sp)
         Spacer(modifier = Modifier.height(12.dp))
-        MenuButton(onClick = { }, text = "LEVELS", color = Color(0xFF2A1513))
+        MenuButton(onClick = onLevelsClick, text = "LEVELS", color = Color(0xFF2A1513))
         Spacer(modifier = Modifier.height(12.dp))
-        MenuButton(onClick = { }, text = "SHOP", color = Color(0xFF2A1513))
+        MenuButton(onClick = onShopClick, text = "SHOP", color = Color(0xFF2A1513))
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // 6. Daily Reward
         DailyRewardButton()
     }
 }
 
-// Компонент для однієї фішки
 @Composable
 fun GameBlock(color: Color, icon: ImageVector, size: Int = 56) {
     Box(
@@ -162,7 +153,6 @@ fun HeroLogoGroup() {
     }
 }
 
-// Універсальна кнопка меню зі стилізованим обідком
 @Composable
 fun MenuButton(
     text: String,
@@ -227,5 +217,5 @@ fun DailyRewardButton() {
 @Preview(showSystemUi = true)
 @Composable
 fun MainScreenPreview() {
-    MainScreen(onPlayClick = {})
+    MainScreen(onPlayClick = {}, onShopClick = {}, onLevelsClick = {})
 }

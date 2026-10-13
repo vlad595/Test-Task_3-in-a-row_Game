@@ -18,21 +18,19 @@ fun AppNavigation() {
 
     val levels = remember { generateLevels() }
 
-    // Імітація бази даних пройдених рівнів (для прикладу)
     val passedLevels = mapOf(1 to 3, 2 to 3, 3 to 2, 4 to 1)
     val currentMoney = 1250
 
     NavHost(navController = navController, startDestination = Screen.Main.route) {
 
-        // 1. Головний екран
         composable(Screen.Main.route) {
             MainScreen(
-                // Передаємо функцію навігації як параметр
-                onPlayClick = { navController.navigate(Screen.Levels.route) }
+                onPlayClick = { navController.navigate(Screen.Game.createRoute(passedLevels.size)) },
+                onLevelsClick = { navController.navigate(Screen.Levels.route)},
+                onShopClick = {}
             )
         }
 
-        // 2. Екран списку рівнів
         composable(Screen.Levels.route) {
             LevelsScreen(
                 money = currentMoney,
@@ -40,26 +38,23 @@ fun AppNavigation() {
                 onLevelClick = { levelId ->
                     navController.navigate(Screen.Game.createRoute(levelId))
                 },
-                onBackClick = { navController.popBackStack() } // Повернення назад
+                onBackClick = { navController.popBackStack() }
             )
         }
 
-        // 3. Екран самої гри
         composable(
             route = Screen.Game.route,
             arguments = listOf(navArgument("levelId") { type = NavType.IntType })
         ) { backStackEntry ->
-            // Отримуємо ID рівня з параметрів (або 1 за замовчуванням)
-            val levelId = backStackEntry.arguments?.getInt("levelId") ?: 1
+            val levelId = (backStackEntry.arguments?.getInt("levelId") ?: 1) + 1
 
-            // Знаходимо конфігурацію саме для цього рівня
             val levelConfig = levels.find { it.id == levelId } ?: levels.first()
 
             GameScreen(
                 levelNumber = levelConfig.id,
                 money = currentMoney,
                 moves = levelConfig.moves,
-                goals = levelConfig.goals,
+                initialGoals = levelConfig.goals,
                 onBackClick = { navController.popBackStack() }
             )
         }

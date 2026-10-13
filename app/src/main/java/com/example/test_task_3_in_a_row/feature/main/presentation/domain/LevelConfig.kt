@@ -15,7 +15,7 @@ fun generateLevels(): List<LevelConfig> {
         // Чим вищий рівень, тим більше типів кубиків треба зібрати (від 1 до 3)
         val numGoalTypes = when {
             level < 10 -> 1
-            level < 40 -> 2
+            level < 20 -> 2
             else -> 3
         }
 
@@ -25,7 +25,6 @@ fun generateLevels(): List<LevelConfig> {
         // Загальна кількість кубиків, які треба зібрати (зростає з рівнями)
         val totalCubesToCollect = 10 + (level / 2)
 
-        // Вибираємо випадкові кольори для мети
         val availableTypes = CubeType.values().toList().shuffled(Random(level))
 
         val goals = (0 until numGoalTypes).map { i ->
