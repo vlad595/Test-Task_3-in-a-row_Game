@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.test_task_3_in_a_row.ui.shared.Header
 
-// Кольори з дизайну
 val BgColor = Color(0xFF140908)
 val GreenLevel = Color(0xFF538C52)
 val GreenHighlight = Color(0xFF6B9C69)
@@ -116,7 +115,6 @@ fun LevelItem(
     stars: Int,
     onClick: () -> Unit
 ) {
-    // Налаштування кольорів залежно від статусу рівня
     val (bgColor, highlightColor, starEmptyColor) = when (status) {
         LevelStatus.PASSED -> Triple(GreenLevel, GreenHighlight, StarEmptyGreen)
         LevelStatus.NEXT -> Triple(RedLevel, RedHighlight, StarEmptyRed)
@@ -127,12 +125,11 @@ fun LevelItem(
 
     Box(
         modifier = Modifier
-            .aspectRatio(1f) // Робимо кнопку квадратною
+            .aspectRatio(1f)
             .clip(RoundedCornerShape(16.dp))
             .background(bgColor)
             .clickable(enabled = isClickable, onClick = onClick)
     ) {
-        // Світлий "відблиск" у верхній частині кнопки
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -142,7 +139,6 @@ fun LevelItem(
         )
 
         if (status == LevelStatus.LOCKED) {
-            // Для заблокованих показуємо тільки іконку замка[cite: 3]
             Icon(
                 imageVector = Icons.Default.Lock,
                 contentDescription = "Locked",
@@ -152,7 +148,6 @@ fun LevelItem(
                     .align(Alignment.Center)
             )
         } else {
-            // Для відкритих показуємо номер та зірки[cite: 3]
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -171,7 +166,6 @@ fun LevelItem(
                     horizontalArrangement = Arrangement.spacedBy(2.dp),
                     modifier = Modifier.padding(top = 4.dp)
                 ) {
-                    // Малюємо 3 зірки
                     repeat(3) { starIndex ->
                         val isEarned = starIndex < stars
                         Icon(
@@ -187,18 +181,15 @@ fun LevelItem(
     }
 }
 
-// Прев'ю екрану з тестовими даними
 @Preview(showSystemUi = true)
 @Composable
 fun LevelsScreenPreview() {
-    // Імітуємо збережений прогрес гравця
     val testPassedLevels = mapOf(
-        1 to 3, // 1 рівень - 3 зірки
-        2 to 3, // 2 рівень - 3 зірки
-        3 to 3, // 3 рівень - 3 зірки
-        4 to 1, // 4 рівень - 3 зірки
-        5 to 2  // 5 рівень - 3 зірки
-        // Наступний доступний буде 6-й
+        1 to 3,
+        2 to 3,
+        3 to 3,
+        4 to 1,
+        5 to 2
     )
 
     LevelsScreen(

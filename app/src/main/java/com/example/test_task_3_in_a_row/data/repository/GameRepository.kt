@@ -27,7 +27,6 @@ class GameRepository @Inject constructor(
         val OWNED_SHOP_ITEMS = stringSetPreferencesKey("owned_shop_items")
         val EQUIPPED_SHOP_ITEM = stringPreferencesKey("equipped_shop_item")
 
-        // Налаштування
         val MUSIC_ENABLED = booleanPreferencesKey("music_enabled")
         val SOUND_ENABLED = booleanPreferencesKey("sound_enabled")
         val VIBRATION_ENABLED = booleanPreferencesKey("vibration_enabled")
@@ -35,7 +34,7 @@ class GameRepository @Inject constructor(
         val LANGUAGE = stringPreferencesKey("language")
     }
 
-    val coinsFlow: Flow<Int> = dataStore.data.map { it[COINS] ?: 1250 }
+    val coinsFlow: Flow<Int> = dataStore.data.map { it[COINS] ?: 0 }
     val bestScoreFlow: Flow<Int> = dataStore.data.map { it[BEST_SCORE] ?: 0 }
     val completedLevelsFlow: Flow<Int> = dataStore.data.map { it[COMPLETED_LEVELS] ?: 0 }
     val unlockedAchievementsFlow: Flow<Set<String>> = dataStore.data.map { it[UNLOCKED_ACHIEVEMENTS] ?: emptySet() }
