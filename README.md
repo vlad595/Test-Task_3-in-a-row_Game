@@ -64,7 +64,7 @@
 
 1. Клонуй репозиторій:
    ```bash
-   git clone [https://github.com/your-username/gear-master.git](https://github.com/your-username/gear-master.git)
+   git clone https://github.com/vlad595/Test-Task_3-in-a-row_Game.git
    ```
 2. Відкрий проєкт у Android Studio (рекомендується версія Iguana або новіша).
 3. Дочекайся завершення синхронізації Gradle.
