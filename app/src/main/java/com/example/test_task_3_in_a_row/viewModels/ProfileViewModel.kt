@@ -5,16 +5,39 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.test_task_3_in_a_row.data.models.Achievement
 import com.example.test_task_3_in_a_row.data.models.ProfileState
+import com.example.test_task_3_in_a_row.data.repository.GameRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlin.collections.emptyList
+import kotlinx.coroutines.flow.*
 
-class ProfileViewModel : ViewModel() {
+@HiltViewModel
+class ProfileViewModel @Inject constructor(private val repository: GameRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(ProfileState())
-    val uiState: StateFlow<ProfileState> = _uiState.asStateFlow()
+    val uiState: StateFlow<ProfileState> = combine(
+        repository.coinsFlow,
+        repository.completedLevelsFlow,
+        repository.bestScoreFlow
+    ) { coins, levels, bestScore ->
+        ProfileState(
+            coins = coins,
+            userName = "GEAR MASTER",
+            userLevel = if (levels == 0) 1 else levels,
+            levelsCompleted = levels,
+            bestScore = bestScore,
+            totalCoinsEarned = coins // Можна додати окремий лічильник в репозиторій
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ProfileState())
 
     private val _allAchievements = MutableStateFlow(
         listOf(
@@ -39,7 +62,11 @@ class ProfileViewModel : ViewModel() {
     private val _achievements = MutableStateFlow(
         _allAchievements.value.filter { it.isCompleted }
     )
-    val achievements: StateFlow<List<Achievement>> = _achievements.asStateFlow()
+    val achievements: StateFlow<List<Achievement>> = repository.unlockedAchievementsFlow
+        .map { unlockedIds ->
+            _allAchievements.value.filter { unlockedIds.contains(it.id) }
+                .map { it.copy(isCompleted = true) }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()) // <--- Додано закриваючу дужку
 
     fun unlockAchievement(id: String) {
         val updatedList = _allAchievements.value.map {
