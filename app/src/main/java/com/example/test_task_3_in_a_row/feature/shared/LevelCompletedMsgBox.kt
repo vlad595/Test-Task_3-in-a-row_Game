@@ -36,7 +36,9 @@ fun LevelCompleteOverlay(
     onNextLevelClick: () -> Unit,
     onRetryClick: () -> Unit,
     onHomeClick: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    coindEarned: Int,
+    score: Int
 ) {
     Box(
         modifier = Modifier
@@ -56,8 +58,8 @@ fun LevelCompleteOverlay(
                 ) {}
         ) {
             LevelCompleteCard(
-                score = "12,480",
-                coins = "+250",
+                score = score.toString(),
+                coins = "+$coindEarned",
                 starsCount = 2,
                 onNextLevelClick = onNextLevelClick,
                 onRetryClick = onRetryClick,
@@ -347,7 +349,9 @@ fun LevelCompleteOverlayPreview() {
             onNextLevelClick = {},
             onRetryClick = {},
             onHomeClick = {},
-            onDismiss = {}
+            onDismiss = {},
+            coindEarned = 245,
+            score = 1265
         )
     }
 }

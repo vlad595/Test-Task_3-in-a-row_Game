@@ -29,15 +29,18 @@ import androidx.compose.runtime.key
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.animation.core.*
 import androidx.compose.runtime.*
+import androidx.navigation.NavHostController
+import com.example.test_task_3_in_a_row.core.navigation.Screen
+import com.example.test_task_3_in_a_row.feature.shared.LevelCompleteOverlay
 
 @Composable
 fun GameScreen(
-    onBackClick: () -> Unit,
     levelNumber: Int,
     money: Int,
     moves: Int,
     initialGoals: List<LevelGoal>,
-    viewModel: GameViewModel = viewModel()
+    viewModel: GameViewModel = viewModel(),
+    navController: NavHostController
 ) {
     LaunchedEffect(Unit) {
         viewModel.initLevel(initialGoals, moves)
@@ -53,6 +56,9 @@ fun GameScreen(
 
     val score by viewModel.score.collectAsState()
 
+    val levelPassedSignal by viewModel.levelPassedSignal.collectAsState()
+    val levelFailedSignal by viewModel.levelFailedSignal.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -60,7 +66,7 @@ fun GameScreen(
             .padding(top = 48.dp, bottom = 24.dp, start = 16.dp, end = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Header(money = money, levelNumber = levelNumber, onBackClick = onBackClick)
+        Header(money = money, levelNumber = levelNumber + 1, onBackClick = {})
         Spacer(modifier = Modifier.height(24.dp))
 
         Row(
@@ -106,6 +112,19 @@ fun GameScreen(
                 onClick = { viewModel.shuffleBoard() }
             )
         }
+    }
+    if (levelPassedSignal){
+        LevelCompleteOverlay(
+            onNextLevelClick = { navController.navigate(Screen.Game.createRoute(levelNumber + 1)) },
+            onRetryClick = { navController.navigate(Screen.Game.createRoute(levelNumber)) },
+            onDismiss = {},
+            onHomeClick = { navController.navigate((Screen.Main.route)) },
+            coindEarned = score / 10,
+            score = score
+        )
+    }
+    if (levelFailedSignal){
+
     }
 }
 

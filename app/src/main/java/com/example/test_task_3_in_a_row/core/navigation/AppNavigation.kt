@@ -46,7 +46,7 @@ fun AppNavigation() {
             route = Screen.Game.route,
             arguments = listOf(navArgument("levelId") { type = NavType.IntType })
         ) { backStackEntry ->
-            val levelId = (backStackEntry.arguments?.getInt("levelId") ?: 1) + 1
+            val levelId = backStackEntry.arguments?.getInt("levelId") ?: 1
 
             val levelConfig = levels.find { it.id == levelId } ?: levels.first()
 
@@ -55,7 +55,7 @@ fun AppNavigation() {
                 money = currentMoney,
                 moves = levelConfig.moves,
                 initialGoals = levelConfig.goals,
-                onBackClick = { navController.popBackStack() }
+                navController = navController
             )
         }
     }

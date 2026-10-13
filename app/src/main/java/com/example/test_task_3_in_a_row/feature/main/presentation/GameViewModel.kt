@@ -35,10 +35,10 @@ class GameViewModel : ViewModel() {
     val score: StateFlow<Int> = _score.asStateFlow()
 
     private val _levelPassedSignal = MutableStateFlow<Boolean>(false)
-    val levelPassedSignal = _levelPassedSignal.asSharedFlow()
+    val levelPassedSignal = _levelPassedSignal.asStateFlow()
 
     private val _levelFailedSignal = MutableStateFlow<Boolean>(false)
-    val levelFailedSignal = _levelFailedSignal.asSharedFlow()
+    val levelFailedSignal = _levelFailedSignal.asStateFlow()
 
     init {
         generateBoard()
