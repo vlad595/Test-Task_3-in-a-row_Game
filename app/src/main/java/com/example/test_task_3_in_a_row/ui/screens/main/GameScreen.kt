@@ -16,8 +16,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.test_task_3_in_a_row.ui.screens.main.domain.Cell
-import com.example.test_task_3_in_a_row.ui.screens.main.domain.LevelGoal
+import com.example.test_task_3_in_a_row.data.models.Cell
+import com.example.test_task_3_in_a_row.data.models.LevelGoal
 import com.example.test_task_3_in_a_row.ui.shared.Header
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState

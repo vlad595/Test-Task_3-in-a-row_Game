@@ -2,9 +2,9 @@ package com.example.test_task_3_in_a_row.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.test_task_3_in_a_row.ui.screens.main.domain.Cell
-import com.example.test_task_3_in_a_row.ui.screens.main.domain.CubeType
-import com.example.test_task_3_in_a_row.ui.screens.main.domain.LevelGoal
+import com.example.test_task_3_in_a_row.data.models.Cell
+import com.example.test_task_3_in_a_row.data.models.CubeType
+import com.example.test_task_3_in_a_row.data.models.LevelGoal
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

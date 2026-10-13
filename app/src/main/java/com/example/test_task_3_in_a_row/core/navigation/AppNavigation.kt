@@ -10,7 +10,7 @@ import androidx.navigation.navArgument
 import com.example.test_task_3_in_a_row.ui.screens.home.MainScreen
 import com.example.test_task_3_in_a_row.ui.screens.levels.LevelsScreen
 import com.example.test_task_3_in_a_row.ui.screens.main.GameScreen
-import com.example.test_task_3_in_a_row.ui.screens.main.domain.generateLevels
+import com.example.test_task_3_in_a_row.data.models.generateLevels
 
 @Composable
 fun AppNavigation() {

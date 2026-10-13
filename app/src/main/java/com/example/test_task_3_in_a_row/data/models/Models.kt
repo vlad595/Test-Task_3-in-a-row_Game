@@ -1,4 +1,4 @@
-package com.example.test_task_3_in_a_row.ui.screens.main.domain
+package com.example.test_task_3_in_a_row.data.models
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
