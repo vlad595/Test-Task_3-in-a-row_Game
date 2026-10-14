@@ -114,6 +114,17 @@ fun GameBlock(color: Color, icon: ImageVector, size: Int = 56) {
             .border(2.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(14.dp)),
         contentAlignment = Alignment.Center
     ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(0.85f)
+                .fillMaxHeight(0.40f)
+                .align(Alignment.TopCenter)
+                .padding(top = 5.dp)
+                .background(
+                    color = Color.White.copy(alpha = 0.15f),
+                    shape = CircleShape
+                )
+        )
         Icon(
             imageVector = icon,
             contentDescription = null,
