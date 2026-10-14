@@ -1,5 +1,6 @@
 package com.example.test_task_3_in_a_row.ui.screens.home
 
+import android.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -14,7 +15,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.focusModifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RadialGradient
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,79 +36,141 @@ val YellowBlock = Color(0xFFE4BC4B)
 val PurpleBlock = Color(0xFF9B63E7)
 
 @Composable
-fun MainScreen(money: Int, onPlayClick: () -> Unit, onLevelsClick: () -> Unit, onShopClick: () -> Unit, onSunButtonClick: () -> Unit, onStarButtonClick: () -> Unit) {
-    Column(
+fun MainScreen(
+    money: Int,
+    onPlayClick: () -> Unit,
+    onLevelsClick: () -> Unit,
+    onShopClick: () -> Unit,
+    onSunButtonClick: () -> Unit,
+    onStarButtonClick: () -> Unit
+) {
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(BgColor)
-            .padding(top = 48.dp, bottom = 24.dp, start = 16.dp, end = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Header(money, isMainScreen = true, onBackClick = { }, onSunButtonClick = onSunButtonClick, onStarButtonClick = onStarButtonClick)
-
-        Spacer(modifier = Modifier.weight(0.8f))
-
-        HeroLogoGroup()
-
-        Spacer(modifier = Modifier.height(24.dp))
-        Text(
-            text = "PAINITE",
-            color = Color.White,
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Black,
-            letterSpacing = 2.sp
+        Box(
+            modifier = Modifier
+                .offset(x = (-120).dp, y = (-200).dp)
+                .size(450.dp)
+                .background(
+                    brush = Brush.radialGradient(
+                        colors = listOf(
+                            Color(0x33544433),
+                            Color(0x0D544400)
+                        )
+                    ),
+                    shape = CircleShape
+                )
         )
-        Text(
-            text = "GEAR",
-            color = Color(0xFFD34A42),
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Black,
-            letterSpacing = 2.sp
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
 
         Box(
             modifier = Modifier
-                .background(Color(0xFF261210), RoundedCornerShape(16.dp))
-                .padding(horizontal = 16.dp, vertical = 6.dp)
+                .offset(x = (150).dp, y = (550).dp)
+                .size(450.dp)
+                .background(
+                    brush = Brush.radialGradient(
+                        colors = listOf(
+                            Color(0x33544433),
+                            Color(0x0D544400)
+                        )
+                    ),
+                    shape = CircleShape
+                )
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 48.dp, bottom = 24.dp, start = 16.dp, end = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "SWAP • MATCH",
-                color = Color.LightGray,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 1.sp
+            Header(
+                money = money,
+                isMainScreen = true,
+                onBackClick = { },
+                onSunButtonClick = onSunButtonClick,
+                onStarButtonClick = onStarButtonClick
             )
+
+            Spacer(modifier = Modifier.weight(0.8f))
+
+            HeroLogoGroup()
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "PAINITE",
+                color = Color.White,
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Black,
+                letterSpacing = 2.sp
+            )
+            Text(
+                text = "GEAR",
+                color = Color(0xFFD34A42),
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Black,
+                letterSpacing = 2.sp
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Box(
+                modifier = Modifier
+                    .background(Color(0xFF261210), RoundedCornerShape(16.dp))
+                    .padding(horizontal = 16.dp, vertical = 6.dp)
+            ) {
+                Text(
+                    text = "SWAP • MATCH",
+                    color = Color.LightGray,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                GameBlock(color = RedBlock, icon = Icons.Default.Star)
+                GameBlock(color = BlueBlock, icon = Icons.Default.ChangeHistory)
+                GameBlock(color = GreenBlock, icon = Icons.Default.RadioButtonUnchecked)
+                GameBlock(color = YellowBlock, icon = Icons.Default.Hexagon)
+                GameBlock(color = PurpleBlock, icon = Icons.Default.Add)
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            MenuButton(
+                onClick = onPlayClick,
+                text = "PLAY",
+                color = Color(0xFFA12921),
+                height = 72.dp,
+                fontSize = 24.sp
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            MenuButton(
+                onClick = onLevelsClick,
+                text = "LEVELS",
+                color = Color(0xFF2A1513)
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            MenuButton(
+                onClick = onShopClick,
+                text = "SHOP",
+                color = Color(0xFF2A1513)
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            DailyRewardButton()
         }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            GameBlock(color = RedBlock, icon = Icons.Default.Star)
-            GameBlock(color = BlueBlock, icon = Icons.Default.ChangeHistory)
-            GameBlock(color = GreenBlock, icon = Icons.Default.RadioButtonUnchecked)
-            GameBlock(color = YellowBlock, icon = Icons.Default.Hexagon)
-            GameBlock(color = PurpleBlock, icon = Icons.Default.Add)
-        }
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        MenuButton(onClick = { onPlayClick() }, text = "PLAY", color = Color(0xFFA12921), height = 72.dp, fontSize = 24.sp)
-        Spacer(modifier = Modifier.height(12.dp))
-        MenuButton(onClick = onLevelsClick, text = "LEVELS", color = Color(0xFF2A1513))
-        Spacer(modifier = Modifier.height(12.dp))
-        MenuButton(onClick = onShopClick, text = "SHOP", color = Color(0xFF2A1513))
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        DailyRewardButton()
     }
 }
-
 @Composable
 fun GameBlock(color: Color, icon: ImageVector, size: Int = 56) {
     Box(
