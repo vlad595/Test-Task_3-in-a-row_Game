@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
@@ -158,27 +159,46 @@ fun HeroLogoGroup() {
 @Composable
 fun MenuButton(
     text: String,
-    color: Color,
-    height: Dp = 56.dp,
-    fontSize: TextUnit = 18.sp,
+    color: Color = Color(0xFF1E0B0A),
+    glowColor: Color = Color(0xFF8B231B),
+    height: Dp = 64.dp,
+    fontSize: TextUnit = 22.sp,
     onClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth(0.75f)
             .height(height)
-            .clip(RoundedCornerShape(32.dp))
+            .shadow(
+                elevation = 24.dp,
+                shape = CircleShape,
+                ambientColor = glowColor,
+                spotColor = glowColor
+            )
+            .clip(CircleShape)
             .background(color)
-            .border(3.dp, Color.White.copy(alpha = 0.1f), RoundedCornerShape(32.dp))
+            .border(1.dp, Color.White.copy(alpha = 0.05f), CircleShape)
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(0.85f)
+                .fillMaxHeight(0.40f)
+                .align(Alignment.TopCenter)
+                .padding(top = 8.dp)
+                .background(
+                    color = Color.White.copy(alpha = 0.15f),
+                    shape = CircleShape
+                )
+        )
+
         Text(
             text = text,
             color = Color.White,
             fontSize = fontSize,
             fontWeight = FontWeight.ExtraBold,
-            letterSpacing = 1.sp
+            letterSpacing = 1.5.sp
         )
     }
 }
