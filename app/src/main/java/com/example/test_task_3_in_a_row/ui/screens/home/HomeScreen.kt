@@ -150,18 +150,18 @@ fun HeroLogoGroup() {
             }
             Box(modifier = Modifier
                 .align(Alignment.TopEnd)
-                .offset(y = 30.dp, x = (-20).dp)) {
+                .offset(y = 30.dp, x = (-5).dp)) {
                 GameBlock(color = GreenBlock, icon = Icons.Default.RadioButtonUnchecked, size = 52)
             }
             Box(modifier = Modifier
                 .align(Alignment.BottomStart)
-                .offset(y = (-30).dp, x = 30.dp)) {
+                .offset(y = (-30).dp, x = 10.dp)) {
                 GameBlock(color = YellowBlock, icon = Icons.Default.Hexagon, size = 48)
             }
             Box(modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .offset(y = (-20).dp, x = (-40).dp)) {
-                GameBlock(color = PurpleBlock, icon = Icons.Default.Add, size = 48)
+                .offset(y = (-20).dp, x = (-20).dp)) {
+                GameBlock(color = PurpleBlock, icon = Icons.Default.Add, size = 36)
             }
         }
     }
